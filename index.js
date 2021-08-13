@@ -15,9 +15,14 @@ const typeDefs = gql`
     created_date: String
   }
 
+  enum SortOP {
+    ASC
+    DESC
+  }
+
   type Query {
     books: [Book]
-    users: [User]
+    users(limit: Int, age_sort: SortOP): [User]
   }
 `
 
@@ -35,7 +40,27 @@ const books = [
 const resolvers = {
   Query: {
     books: () => books,
-    users: () => users
+    users: (_parent, args) => {
+      let result = users
+      let limit = args.limit || null
+      let age_sort = args.age_sort || ''
+
+      if (age_sort) {
+        const ope = age_sort === 'ASC' ? 1 : -1
+
+        resutl = users.sort((x, y) => {
+          if (x['age'] > y['age']) return ope
+          if (x['age'] < y['age']) return -ope
+          return 0
+        })
+      }
+
+      if (limit) {
+        result = result.slice(0, limit)
+      }
+
+      return result
+    }
   }
 }
 
