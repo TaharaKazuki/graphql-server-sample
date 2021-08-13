@@ -1,1 +1,1 @@
-# graphql-server-sample
+# graphql-server-example
