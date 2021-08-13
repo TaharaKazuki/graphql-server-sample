@@ -1,5 +1,6 @@
 const express = require('express')
-const { ApolloServer, gql }= require('apollo-server-express')
+const { ApolloServer, gql } = require('apollo-server-express')
+const { users } = require('./users')
 
 const typeDefs = gql`
   type Book {
@@ -7,8 +8,16 @@ const typeDefs = gql`
     author: String
   }
 
+  type User {
+    id: Int
+    name: String
+    age: Int
+    created_date: String
+  }
+
   type Query {
     books: [Book]
+    users: [User]
   }
 `
 
@@ -25,11 +34,12 @@ const books = [
 
 const resolvers = {
   Query: {
-    books: () => books
+    books: () => books,
+    users: () => users
   }
 }
 
-async function startApolloServer (typeDefs, resolvers) {
+async function startApolloServer(typeDefs, resolvers) {
   const server = new ApolloServer({ typeDefs, resolvers })
 
   await server.start()
@@ -39,7 +49,7 @@ async function startApolloServer (typeDefs, resolvers) {
     path: '/'
   })
 
-  await new Promise(resolve => app.listen({ port: 4000 }, resolve))
+  await new Promise((resolve) => app.listen({ port: 4000 }, resolve))
   console.info(`Server ready at http://localhost:4000${server.graphqlPath}`)
 }
 
