@@ -44,7 +44,7 @@ const resolvers = {
       let result = users
       let limit = args.limit || null
       let age_sort = args.age_sort || ''
-
+      console.info('通過')
       if (age_sort) {
         const ope = age_sort === 'ASC' ? 1 : -1
 
